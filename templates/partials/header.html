@@ -1,0 +1,101 @@
+<section class="header-section">
+    <div class="d-flex align-center">
+        <div class="logo">
+            <a href="{{route}}">DocumentGPT</a>
+        </div>
+    </div>
+
+    <div class="d-flex align-center">
+        <div class="more-options-button d-flex align-center justify-between" id="more-options">
+            <p style="margin: 0 10px 0 0;"></p> 
+            <!-- user_info['display_name'] -->
+            <span class="fas fa-caret-down" style="font-size: 26px;"></span>
+        </div>
+        <div class="dropdown-wrapper">
+            <ul class="menu-bar">
+                <li><a href="{{route}}/account">My Profile</a></li>
+                <li><a href="{{route}}/projects">Dashboard</a></li>
+                <li><a href="{{route}}/settings">Settings</a></li>
+                <li><a class="logout" href="{{route}}/logout">Sign Out</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('more-options').addEventListener('click', () => {
+            document.querySelector('.dropdown-wrapper').classList.toggle('show');
+        });
+    </script>
+
+    <style>
+        .logo a {
+            text-decoration: none;
+            color: inherit;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .more-options-button {
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .dropdown-wrapper {
+            position: absolute;
+            width: 280px;
+            background: var(--white);
+            border-radius: 5px;
+            box-shadow: var(--box-shadow);
+            display: none;
+            right: 20px;
+            top: 75px;
+            z-index: 9999;
+        }
+
+        .dropdown-wrapper.show {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dropdown-wrapper ul {
+            list-style: none;
+            margin: 0;
+            padding: 0.75rem;
+        }
+
+        .dropdown-wrapper ul li {
+            line-height: 55px;
+        }
+
+        .dropdown-wrapper ul li a {
+            font-size: 16px;
+            font-weight: 500;
+            padding: 0 10px;
+            display: block;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--secondary-black);
+        }
+
+        .dropdown-wrapper ul li a:hover {
+            background: #eee;
+        }
+
+        .logout {
+            text-decoration: none;
+        }
+
+        @media (max-width: 576px) {
+            .dropdown-wrapper {
+                width: 100vw;
+                bottom: 0;
+                right: 0;
+                border-radius: 25px 25px 0 0;
+                padding: 10px;
+                position: fixed;
+            }
+        }
+    </style>
+</section>

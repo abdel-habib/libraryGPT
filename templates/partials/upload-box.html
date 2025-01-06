@@ -1,0 +1,156 @@
+<style>
+    .upload-box {
+        width: 100%;
+        /* max-width: 600px; */
+        padding: 30px;
+        text-align: center;
+        /* border: 2px dashed #0078d4; */
+        border-radius: 8px;
+        background-color: #ffffff;
+        /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+        box-shadow: var(--box-shadow);
+        cursor: pointer;
+        max-height: 18vh; /*93vh; */
+        height: 100%;
+
+        margin-top: 20px;
+    }
+
+    .upload-box:hover {
+        background-color: #f3f9ff;
+    }
+
+    .upload-box .img-icon {
+        width: 80px;
+        margin-bottom: 20px;
+    }
+
+    .upload-box h2 {
+        margin: 10px 0;
+        font-size: 18px;
+        color: #333333;
+    }
+
+    .upload-box p {
+        font-size: 14px;
+        color: #666666;
+        margin: 5px 0 20px;
+    }
+
+    .upload-box .file-list {
+        margin-top: 15px;
+    }
+
+    .upload-box .file-list span {
+        display: block;
+        font-size: 14px;
+        color: #555555;
+    }
+
+    .upload-button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #ffffff;
+        background-color: #0078d4;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-transform: uppercase;
+    }
+
+    .upload-button:hover {
+        background-color: #005bb5;
+    }
+
+    .hidden-input {
+        display: none;
+    }
+
+    .upload-section{
+        display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+        display: -ms-flexbox;  /* TWEENER - IE 10 */
+        display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+        display: flex;         /* NEW, Spec - Firefox, Chrome, Opera */
+        
+        justify-content: center;
+        /* align-items: center; */
+    }
+
+</style>
+<div class="col-7 upload-section">
+    <div class="upload-box" id="drop-zone">        
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
+        <h2>Get started by adding your first file</h2>
+        <p>Create new documents directly or upload an existing file</p>
+        <button class="upload-button" id="upload-button">Upload</button>
+        <input type="file" id="file-input" class="hidden-input" accept="application/pdf" multiple>
+        <div class="file-list" id="file-list"></div>
+    </div>                    
+</div>
+    
+<script>
+
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const uploadButton = document.getElementById('upload-button');
+    const fileList = document.getElementById('file-list');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    uploadButton.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        dropZone.style.backgroundColor = '#f3f9ff';
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.style.backgroundColor = '#ffffff';
+    });
+
+    dropZone.addEventListener('drop', (event) => {
+        event.preventDefault();
+        dropZone.style.backgroundColor = '#ffffff';
+        handleFiles(event.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', () => {
+        handleFiles(fileInput.files);
+    });
+
+    function handleFiles(files) {
+        const formData = new FormData();
+        fileList.innerHTML = '';
+
+        for (const file of files) {
+            if (file.type === 'application/pdf') {
+                formData.append('files', file);
+                const span = document.createElement('span');
+                span.textContent = `Uploaded: ${file.name}`;
+                fileList.appendChild(span);
+            } else {
+                alert('Only PDF files are allowed.');
+            }
+        }
+
+        uploadFiles(formData);
+    }
+
+    function uploadFiles(formData) {
+        fetch('/upload', {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            if (response.ok) {
+                alert('Files uploaded successfully!');
+            } else {
+                alert('Error uploading files.');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+            alert('Error uploading files.');
+        });
+    }
+
+</script>
