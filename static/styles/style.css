@@ -463,11 +463,18 @@ a:hover {
     font-weight: bold;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1770px) {
+    .folders-grid{
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+    }    
+}
+
+@media (max-width: 1024px) {
     .chat-header{
         display: none;
     }
     .chat-container{
+        width: 100vw;
         height: max-content;
         position: fixed;
         bottom: 0;

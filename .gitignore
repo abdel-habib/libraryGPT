@@ -4,6 +4,7 @@ chroma_db/
 # templated files
 static/workspace_directories.json
 uploads/
+todo.md
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
