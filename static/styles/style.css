@@ -265,6 +265,7 @@ a:hover {
     border-radius: 6px;
     background: #eee;
     word-wrap: break-word; /* Handle long words gracefully */
+    white-space: pre-wrap; /* Preserve line breaks */
 }
 
 /* Add a class for chatbot messages */
