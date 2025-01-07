@@ -7,6 +7,8 @@
     --box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
+
+
 html::-webkit-scrollbar-track, .cool-scroll::-webkit-scrollbar-track, .card-slider::-webkit-scrollbar-track, .cool-scroll::-webkit-scrollbar-track{
     -webkit-box-shadow:inset 0 0 6px rgba(0,0,0,0.2);border-radius:10px;
     background-color:#F5F5F500
@@ -41,7 +43,7 @@ body{
     color: var(--black);
     background-color: var(--white);
     box-shadow: var(--box-shadow);
-    height: 5vh; /* 72px; */
+    height: 60px; /* 72px; */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -83,3 +85,419 @@ a:hover {
       display: block !important;
     }
 }
+/* Toggle Panel */
+.panel-section {
+    background-color: #fff;
+    box-shadow: var(--box-shadow);
+    height: 100vh;
+    transition: 0.5s;
+}
+
+.panel-section .header {
+    padding: 20px;
+    /* border-bottom: 1px solid #e0e0e0; */
+    text-align: center;
+    box-shadow: var(--box-shadow);
+    font-weight: bold;
+    font-size: medium
+}
+
+.panel-section .settings {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 20px;
+    text-align: left;
+    font-weight: bold;
+    font-size: medium;
+    box-shadow: var(--box-shadow);
+}
+
+.panel-section .item {
+    padding: 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+}
+
+.panel-section .item a {
+    padding-left: 15px;
+    font-size: 1rem;
+}
+
+
+/* Chat */
+
+.chat-container {
+    background-color: #fff;
+    box-shadow: var(--box-shadow);
+    height: calc(100vh - 60px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    padding: 0;
+}
+
+.chat-container .chat-footer {
+    /* position: absolute;
+    bottom: 0; */
+    width: 100%;
+    padding: 20px;
+    text-align: left;
+    font-weight: bold;
+    font-size: medium;
+    box-shadow: var(--box-shadow);
+}
+
+.chat-container .chat-footer-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-footer-wrapper textarea{
+    width: 100%;
+    border: none;
+    outline: none;
+    resize: none;
+    height: auto;
+    background-color: transparent;
+}
+
+.chat-footer-wrapper button{
+    background-color: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.start-chat-message-wrapper {
+    display: block;
+    height: 100%;
+    cursor: pointer;
+    /* height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center; */
+}
+
+/* upload functionality */
+.hidden-input {
+    display: none;
+}
+
+.upload-box{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 30px;
+}
+
+/* 
+.upload-box:hover {
+    background-color: #f3f9ff;
+} */
+
+.upload-box .img-icon {
+    width: 80px;
+    margin-bottom: 20px;
+}
+
+    
+.upload-box span {
+    font-size: 14px;
+    color: #666666;
+    margin: 5px 0 20px;
+}
+
+
+
+.file-list {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.file-list svg {
+    display: none;
+    margin-right: 10px;
+}
+
+.chat-header {
+    position: relative;
+    width: 100%;
+}
+
+.chat-header button {
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    text-align: inherit;
+    appearance: none;
+}
+
+.chat-header svg {
+    width: fit-content;
+    cursor: pointer;
+    margin: 20px;
+}
+
+.chat-message-wrapper {
+    display: flex;
+    flex-direction: column; /* Stack messages vertically */
+    gap: 10px; /* Space between messages */
+    height: 100%;
+    width: 100%;
+    padding: 0 20px;
+}
+
+.user-message {
+    align-self: flex-end; /* Align user messages to the right */
+    max-width: 60%; /* Optional: Limit the width of messages */
+    padding: 10px 20px;
+    border-radius: 6px;
+    background: #eee;
+    word-wrap: break-word; /* Handle long words gracefully */
+}
+
+/* Add a class for chatbot messages */
+.chatbot-message {
+    align-self: flex-start; /* Align chatbot messages to the left */
+    max-width: 60%; /* Optional: Limit the width of messages */
+    padding: 10px 20px;
+    border-radius: 6px;
+    background: #d9f7be; /* Different background for chatbot messages */
+    word-wrap: break-word; /* Handle long words gracefully */
+}
+
+.directory-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    display: block;
+}
+
+.document-search-wrapper{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.document-search-wrapper, .folders-wrapper{
+    margin: 30px 30px 0px 30px;
+}
+
+.document-search-wrapper .document-search-input{
+    width: 60vw;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    outline: none;
+    box-shadow: var(--box-shadow);
+}
+
+.document-search-wrapper .top-k-input{
+    max-width: 66px;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    outline: none;
+    box-shadow: var(--box-shadow);
+    margin-left: 10px;
+    text-align: center;
+}
+
+.document-search-wrapper .top-k-wrapper{
+    width: fit-content;
+    padding-right: 0;
+}
+
+.document-search-wrapper input:focus{
+    border: 1px solid #007bff;
+}
+
+.folders-wrapper{
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.folders-header{
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--box-shadow);
+}
+
+.folders-header button{
+    background: #007bff;
+    color: #fff;
+    border: none;
+    box-shadow: var(--box-shadow);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.folders-header .dropdown{
+    width: 400px;
+}
+
+.folders-header select{
+    padding: 10px;
+    width: 100%;
+    border-radius: 8px;
+    border-color: #eee;
+    cursor: pointer;
+    box-shadow: var(--box-shadow);
+    outline: none;
+}
+
+.folders-header button:hover{
+    background: #0056b3;
+}
+
+.folders-grid{
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    row-gap: 1rem;
+    column-gap: 1.5rem;
+    grid-auto-flow: row;
+    line-height: 2.14rem;
+    padding: 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: var(--box-shadow);
+}
+
+.folder-box{
+    width: 200px;
+    height: 210px;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 8px;
+    /* height: 126px; */
+    text-decoration: none;
+    color: inherit;
+    outline: none;
+}
+
+
+.folder-image {
+    width: 190px;
+    height: 190px;
+    background-size: cover;
+    background-position: center;
+    display: block;
+    border-radius: 8px;
+    border: 1px solid #eee;        
+}
+
+.folder-name {
+    display: block;
+    max-width: 190px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+    position: relative;
+    bottom: 50px;
+    background: #eee;
+    border-radius: 0 0 8px 8px;
+    padding: 10px 5px 0 5px;
+    background: linear-gradient(to down, rgba(169, 208, 113, 0), rgba(136, 173, 215, 1));
+    background: linear-gradient(to top, rgba(10, 10, 10, 1), rgba(0, 0, 0, 0));
+    color: #fff;
+    height: 50px;
+}
+
+.search-results {
+    background-color: #fff;
+    position: absolute; /* Position relative to the nearest positioned ancestor */
+    top: 100%; /* Place it just below the input field */
+    left: 0; /* Align to the left of the parent container */
+    z-index: 9999; /* Ensure it's above other elements */
+    margin-top: 5px; /* Optional: add some space between the input and results */
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: add a shadow for better visibility */
+    width: 100%; /* Make it span the full width of the parent container */
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 80vh;
+}
+
+
+.result-box {
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f3f9ff;
+    margin-bottom: 10px;
+}
+
+.result-box span {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.result-box .similarity-score{
+    color: green;
+}
+
+.result-box .pdf-name{
+    margin: 0;
+    font-style: italic;
+    font-weight: bold;
+}
+
+@media (max-width: 960px) {
+    .chat-header{
+        display: none;
+    }
+    .chat-container{
+        height: max-content;
+        position: fixed;
+        bottom: 0;
+        height: calc(100vh - 60px);
+    }
+
+    .chat-message-wrapper {
+        padding: 10px;
+    }
+
+    .chat-container .chat-footer{
+        padding: 20px 10px;
+    }
+
+    .directory-container{
+        display: none;
+    }
+
+    .document-search-wrapper, .folders-wrapper{
+        margin: 10px;
+    }
+
+    .document-search-wrapper .document-search-input, .folders-header select {
+        width: 185px;
+    }
+
+    .folders-header{
+        padding: 10px;
+    }
+}
+
+
+
