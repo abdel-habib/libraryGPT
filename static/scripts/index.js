@@ -39,7 +39,8 @@ function sendMessage() {
 
 // Fullscreen chat toggle
 function fullScreenChat() {
-    chatContainer.classList.toggle('fullscreen');
+    chatContainer.classList.toggle('col-lg-3');
+    chatContainer.classList.toggle('col-lg-12');
     workspaceContainer.classList.toggle('d-none');
 }
 

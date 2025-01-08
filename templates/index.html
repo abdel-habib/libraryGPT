@@ -45,7 +45,7 @@
 
             <div class="col-lg-9 col-sm-12 directory-container" id="directory-container">
                 <div class="row document-search-wrapper">
-                    <input class="document-search-input" type="text" name="documents-search" placeholder="Search for a text in all the document."
+                    <input class="document-search-input" type="text" name="documents-search" placeholder="Text to search for text in all documents ..."
                     id="documents-search">
                     <span class="top-k-wrapper">
                         <span>Top-k:</span>
@@ -63,7 +63,7 @@
                                 <select id="directory-menu">
                                     <option value="" disabled selected>Choose your working directory</option>
                                     {% for item in workspace_json %}
-                                        <option value="{{ item.path }}">{{ item.tag }}: {{ item.path }}</option>
+                                        <option value="{{ item.path }}">"{{ item.path }}"</option>
                                     {% endfor %}
                                 </select>
                             {% else %}
@@ -88,18 +88,18 @@
             </div>
 
             <div class="col-lg-3 col-sm-12 chat-container" id="chat-container">
-                <div class="row chat-header">
+                <div class="chat-header">
                     <button onclick="fullScreenChat()">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M120-120v-320h80v184l504-504H520v-80h320v320h-80v-184L256-200h184v80H120Z"/></svg>
                     </button>
                 </div>
-                <div class="row chat-message-wrapper d-none" id="chat-zone">
+                <div class="chat-message-wrapper d-none" id="chat-zone">
                 </div>
                 <div class="start-chat-message-wrapper upload-box" id="drop-zone">
                     <!-- <span>Drag and drop your PDF file or upload manually then start a conversation!</span> -->
                     <span>Drag and drop your PDF file or upload manually then start a conversation!</span>   
                 </div>
-                <div class="row chat-footer">
+                <div class="chat-footer">
                     <div class="file-list" id="file-list">
                         <svg id="attachment-svg" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M720-330q0 104-73 177T470-80q-104 0-177-73t-73-177v-370q0-75 52.5-127.5T400-880q75 0 127.5 52.5T580-700v350q0 46-32 78t-78 32q-46 0-78-32t-32-78v-370h80v370q0 13 8.5 21.5T470-320q13 0 21.5-8.5T500-350v-350q-1-42-29.5-71T400-800q-42 0-71 29t-29 71v370q-1 71 49 120.5T470-160q70 0 119-49.5T640-330v-390h80v390Z"/></svg>
                     </div>
