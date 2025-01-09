@@ -11,6 +11,7 @@ const generateEmbeddingsButton  = document.getElementById('generate-embeddings')
 const documentSearch            = document.getElementById('documents-search');
 const topKInput                 = document.getElementById('top-k-input');
 const searchResults             = document.getElementById('search-results');
+const chatFooter                = document.getElementById('chat-footer');
 const filesDirectories          = []
 
 
@@ -18,6 +19,12 @@ const filesDirectories          = []
 function resizeTextarea(textarea) {
     textarea.style.height = 'auto'; // Reset height to calculate the new size
     textarea.style.height = `${textarea.scrollHeight}px`; // Set height to scrollHeight
+
+    if (textarea.scrollHeight > 75) {
+        chatFooter.style.height = `${2*textarea.scrollHeight}px`; // Set chat footer height
+    }else{
+        chatFooter.style.height = '130px'; // Set chat footer height
+    }
 }
 
 // Send chat message
@@ -35,6 +42,9 @@ function sendMessage() {
     // handle views
     dropZone.style.display = 'none';
     chatZone.classList.remove('d-none');
+
+    // resize chat footer
+    chatFooter.style.height = '110px';
 }
 
 // Fullscreen chat toggle

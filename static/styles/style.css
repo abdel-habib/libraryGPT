@@ -38,21 +38,6 @@ body{
     height: 100vh;
 }
 
-
-/* .header-section {
-    color: var(--black);
-    background-color: var(--white);
-    box-shadow: var(--box-shadow);
-    height: 60px; 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 32px;
-    position: sticky;
-    top: 0;
-    z-index: 50;
-} */
-
 .header-section {
     color: var(--black);
     background-color: var(--white);
@@ -64,7 +49,7 @@ body{
     padding: 0 32px;
     position: sticky;
     top: 0;
-    z-index: 50;
+    z-index: 999999;
     box-sizing: border-box; /* Ensure padding and border don't overflow */
 }
 
@@ -165,6 +150,9 @@ a:hover {
     font-weight: bold;
     font-size: medium;
     box-shadow: var(--box-shadow);
+
+    max-height: 130px;
+    min-height: 100px;
 }
 
 .chat-container .chat-footer-wrapper {
@@ -491,32 +479,50 @@ a:hover {
 }
 
 @media (max-width: 1024px) {
+
+    .header-section{
+        position: fixed;
+        width: 100%;
+        
+    }
+    .workspace {
+        position: relative;
+        /* overflow: hidden; */
+    }
     .chat-header{
         display: none;
     }
     .chat-container{
-        height: calc(100vh - 60px); /* Remaining viewport height after header */
-        overflow-y: auto; /* Enables scrolling if content exceeds the available space */
+        /* max-height: calc(100vh - 200px); */
+        /* overflow-y: auto; */
         /* padding: 16px; Optional padding for better readability */
         box-sizing: border-box;
         /* overflow: none; */
+        /* display: block; */
+        box-shadow: unset;
+        position: fixed;
+        top: 60px;
     }
 
+
     .start-chat-message-wrapper{
-        height: calc(100% - 60px); 
-        padding: 10px 30px;
-        box-sizing: border-box;  
+        display: none;
+        /* padding: 10px 30px;
+        box-sizing: border-box;   */
     }
 
     .chat-message-wrapper {
-        padding: 10px;
-        height: calc(100% - 60px); /* Account for header and footer */
-        width: 100%; /* Force the wrapper to fill the container */
+        max-height: calc(100vh - 200px);
+        height: 100%;
+        padding: 20px 20px 50px 20px;
+        /* height: calc(100% - 60px);  */
+        width: 100%;
         overflow-y: auto;
-        overflow-x: hidden; /* Prevent horizontal scrolling */
-        word-wrap: break-word; /* Wrap long words */
-        white-space: normal; /* Ensure content doesn’t overflow */
+        overflow-x: hidden; 
+        word-wrap: break-word; 
+        white-space: normal; 
         box-sizing: border-box;    
+        /* margin: 80px 0; */
     }
 
     .user-message, .chatbot-message {
@@ -527,10 +533,25 @@ a:hover {
         overflow-wrap: break-word; /* For very long strings like URLs */
         box-sizing: border-box;    
     }
-
-    .chat-container .chat-footer{
-        position: sticky;
+    .chat-container .chat-footer {
+        position: fixed;
         bottom: 0;
+        height: 110px;
+        box-shadow: unset;
+        background-color: #fff;
+
+        max-height: 200px;
+        min-height: 100px;
+    }
+    .chat-container .chat-footer .chat-footer-box{
+        position: fixed;
+        left: 50%;
+        transform: translate(-50%, 0);
+        border-radius: 20px;
+        width: 90vw;
+        margin: 0;
+        padding: 20px 10px;
+        box-shadow: var(--box-shadow);
     }
 
     .directory-container{
@@ -553,10 +574,13 @@ a:hover {
     body, html {
         margin: 0;
         padding: 0;
-        overflow-x: hidden; /* Prevent horizontal scrolling on small screens */
+        /* overflow-x: hidden; Prevent horizontal scrolling on small screens */
+        overflow: hidden;;
+        background-color: #fff;
     }
 
 }
+
 
 
 
