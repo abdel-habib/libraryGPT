@@ -23,7 +23,7 @@ function resizeTextarea(textarea) {
     if (textarea.scrollHeight > 75) {
         chatFooter.style.height = `${2*textarea.scrollHeight}px`; // Set chat footer height
     }else{
-        chatFooter.style.height = '130px'; // Set chat footer height
+        chatFooter.style.height = '110px'; // Set chat footer height
     }
 }
 
