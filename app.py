@@ -9,7 +9,7 @@ import os
 from io import BytesIO
 import json
 from dotenv import load_dotenv
-from static.helpers.pdf_preview import return_pdf_preview_html
+from helpers.pdf_preview import return_pdf_preview_html
 import PyPDF2
 
 # from sentence_transformers import SentenceTransformer
@@ -18,7 +18,6 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-
 
 app = Flask(__name__)
 

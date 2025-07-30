@@ -1,5 +1,5 @@
-const dropZone                  = document.getElementById('drop-zone');
-const fileInput                 = document.getElementById('file-input');
+// const dropZone                  = document.getElementById('drop-zone');
+// const fileInput                 = document.getElementById('file-input');
 const uploadButton              = document.getElementById('upload-button');
 const fileList                  = document.getElementById('file-list');
 const attachmentSvg             = document.getElementById('attachment-svg');
@@ -16,16 +16,17 @@ const filesDirectories          = []
 
 
 // Resize chat input
-function resizeTextarea(textarea) {
-    textarea.style.height = 'auto'; // Reset height to calculate the new size
-    textarea.style.height = `${textarea.scrollHeight}px`; // Set height to scrollHeight
+function resizeTextArea(textarea) {
+    textarea.style.height = 'auto';
 
-    if (textarea.scrollHeight > 75) {
-        chatFooter.style.height = `${2*textarea.scrollHeight}px`; // Set chat footer height
-    }else{
-        chatFooter.style.height = '110px'; // Set chat footer height
-    }
+    const maxHeight = window.innerHeight * 0.10 - 20; // 10vh in pixels - 10px for padding
+
+    // Temporarily set height to scrollHeight to measure
+    const scrollHeight = textarea.scrollHeight;
+
+    textarea.style.height = Math.min(scrollHeight, maxHeight) + 'px';
 }
+
 
 // Send chat message
 function sendMessage() {
@@ -40,11 +41,11 @@ function sendMessage() {
     chatZone.innerHTML += userMessage;
 
     // handle views
-    dropZone.style.display = 'none';
-    chatZone.classList.remove('d-none');
+    // dropZone.style.display = 'none';
+    // chatZone.classList.remove('d-none');
 
     // resize chat footer
-    chatFooter.style.height = '110px';
+    // chatFooter.style.height = '10vh';
 }
 
 // Fullscreen chat toggle
@@ -95,19 +96,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Event listeners for file input and drop zone
-    dropZone.addEventListener('click', () => fileInput.click());
-    uploadButton.addEventListener('click', () => fileInput.click());
+    // dropZone.addEventListener('click', () => fileInput.click());
+    // uploadButton.addEventListener('click', () => fileInput.click());
     
-    dropZone.addEventListener('dragover', event => {
-        event.preventDefault();
-    });
+    // dropZone.addEventListener('dragover', event => {
+    //     event.preventDefault();
+    // });
     
-    dropZone.addEventListener('drop', event => {
-        event.preventDefault();
-        handleFiles(event.dataTransfer.files);
-    });
+    // dropZone.addEventListener('drop', event => {
+    //     event.preventDefault();
+    //     handleFiles(event.dataTransfer.files);
+    // });
 
-    fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+    // fileInput.addEventListener('change', () => handleFiles(fileInput.files));
 
     // Directory selection handling
     directoryDropdown.addEventListener('change', async () => {
@@ -129,9 +130,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     foldersGrid.classList.remove('d-none');
 
                     data.pdf_files.forEach(element => {
+                        // <span class="folder-image" style="background-image: url(${element.data_url})"></span>
+
                         const pdfHtml = `
                             <div class="folder-box">
-                                <span class="folder-image" style="background-image: url(${element.data_url})"></span>
                                 <span class="folder-name">${element.file_name}</span>
                             </div>`;
                         foldersGrid.innerHTML += pdfHtml;
@@ -148,7 +150,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Bind resize function to textarea input
-    document.getElementById('chat-input-text').addEventListener('input', event => resizeTextarea(event.target));
+    document.getElementById('chat-input-text').addEventListener('input', event => resizeTextArea(event.target));
+
 
     // Generate embeddings
     generateEmbeddingsButton.addEventListener('click', async () => {

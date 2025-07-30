@@ -17,6 +17,11 @@
     <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=upload_file" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=send" /> -->
     <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=docs" /> -->
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=open_in_full" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=send" />
+
+
 </head>
 <body>
     {% include 'partials/header.html' %}
@@ -90,34 +95,38 @@
             <div class="col-lg-3 col-sm-12 chat-container" id="chat-container">
                 <div class="chat-header">
                     <button onclick="fullScreenChat()">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M120-120v-320h80v184l504-504H520v-80h320v320h-80v-184L256-200h184v80H120Z"/></svg>
+                        <img class="icon-expand" src="{{ url_for('static', filename='svgs/open_in_full.svg') }}" alt="">
+                    </button>
+                    <button onclick="fullScreenChatMobile()" class="mobile-only">
+                        <img class="icon-expand mobile-only" src="{{ url_for('static', filename='svgs/close_fullscreen.svg') }}" alt="">
                     </button>
                 </div>
-                <div class="chat-message-wrapper d-none card-slider" id="chat-zone">
+
+                <div class="chat-message-wrapper card-slider" id="chat-zone">
                 </div>
-                <div class="start-chat-message-wrapper upload-box" id="drop-zone">
-                    <!-- <span>Drag and drop your PDF file or upload manually then start a conversation!</span> -->
-                    <span>Drag and drop your PDF file or upload manually then start a conversation!</span>   
-                </div>
+
+                <!-- <div class="start-chat-message-wrapper" id="startChatMessage">
+                    <span>Start chatting with your documents!</span>
+                    <div class="chat-messages-suggestions">
+                        <button onclick="sendMessage('Give me the biggest transaction in the past 5 days', output_format_request='text')">Give me the biggest transaction in the past 5 days</last></button>
+                        <button onclick="sendMessage('Give me the biggest transaction in the past 15 days', output_format_request='text')">Give me the biggest transaction in the past 15 days</button>
+                        <button onclick="sendMessage('Give me the lowest transaction in the past 30 days', output_format_request='text')">Give me the lowest transaction in the past 30 days</button>
+                    </div>
+                </div> -->
                 
                 <div class="chat-footer" id="chat-footer">
-                        <div class="chat-footer-box">
-                            <div class="file-list" id="file-list">
-                                <svg id="attachment-svg" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M720-330q0 104-73 177T470-80q-104 0-177-73t-73-177v-370q0-75 52.5-127.5T400-880q75 0 127.5 52.5T580-700v350q0 46-32 78t-78 32q-46 0-78-32t-32-78v-370h80v370q0 13 8.5 21.5T470-320q13 0 21.5-8.5T500-350v-350q-1-42-29.5-71T400-800q-42 0-71 29t-29 71v370q-1 71 49 120.5T470-160q70 0 119-49.5T640-330v-390h80v390Z"/></svg>
-                            </div>
-                            <span class="chat-footer-wrapper">
-                                <!-- <input class="input-text" type="text" placeholder="Type a message to start chatting..."> -->
-                                <textarea id="chat-input-text" class="input-text card-slider" rows="1" cols="50" placeholder="Start chatting" oninput="resizeTextarea(this)"></textarea>
-                                <button class="upload-button" id="upload-button">
-                                    <input type="file" id="file-input" class="hidden-input" accept="application/pdf" multiple>
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
-                                </button>
-                                <button onclick="sendMessage()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z"/></svg>
-                                </button>
+                    <textarea 
+                        class="chat-input-text card-slider" 
+                        id="chat-input-text"
+                        rows="1"
+                        cols="50"
+                        placeholder="Type your message here..."
+                    ></textarea>
+                    <button onclick="sendMessage('',output_format_request='text')">
+                        <span class="material-symbols-outlined">
+                            send
                             </span>
-                    </div>
-                    
+                    </button>
                 </div>
 
             </div>
