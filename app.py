@@ -115,7 +115,12 @@ def generate_pdfs_embeddings():
                 except Exception as e:
                     print(f"Error adding documents to Chroma: {e}")
                     return jsonify({"error": str(e)}), 500
-                
+
+        # Persist the vectorstore to disk 
+        # This is important to save the embeddings and documents
+        # If you don't persist, the embeddings will be lost when the app restarts               
+        vectorstore.persist()
+
         return jsonify({'message': 'Embeddings generated successfully'}), 200
 
     except Exception as e:

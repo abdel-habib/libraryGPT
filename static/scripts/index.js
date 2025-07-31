@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="result-box">
                             <span>
                                 <p class="pdf-name">PDF File: ${result.file_name}</p>
-                                <p class="similarity-score">Similarity Score: ${result.similarity}</p>
+                                <p class="similarity-score">Similarity Score: ${result.similarity.toFixed(5)}</p>
                             </span>
                             <p>${result.text}</p>
                         </div>
