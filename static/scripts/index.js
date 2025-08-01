@@ -12,7 +12,9 @@ const documentSearch            = document.getElementById('documents-search');
 const topKInput                 = document.getElementById('top-k-input');
 const searchResults             = document.getElementById('search-results');
 const chatFooter                = document.getElementById('chat-footer');
-const filesDirectories          = []
+const directoryInput            = document.getElementById('directory-input');
+const startChatMessage          = document.getElementById('start-chat-message');
+// const filesDirectories          = []
 
 
 // Resize chat input
@@ -29,12 +31,19 @@ function resizeTextArea(textarea) {
 
 
 // Send chat message
-function sendMessage() {
-    const inputText = document.getElementById('chat-input-text');
-    const message = inputText.value;
-    inputText.value = ''; // Clear input field
+function sendMessage(text, output_format_request = 'text') {
+    let inputText, message;
 
-    inputText.style.height = 'auto'; // Reset textarea height
+    if (output_format_request === 'text') {
+        inputText = document.getElementById('chat-input-text');
+        message = inputText.value;
+        inputText.value = ''; // Clear input field
+        inputText.style.height = 'auto'; // Reset textarea height
+    }else if (output_format_request === 'popup') {
+        message = text;
+        startChatMessage.style.display = 'none'; // Hide start chat message
+    }
+
 
     // Append user message to chat
     const userMessage = `<div class="user-message"><span>${message}</span></div>`;
@@ -110,121 +119,132 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // fileInput.addEventListener('change', () => handleFiles(fileInput.files));
 
-    // Directory selection handling
-    directoryDropdown.addEventListener('change', async () => {
-        const selectedValue = directoryDropdown.value;
+    // // Directory selection handling
+    // directoryDropdown.addEventListener('change', async () => {
+    //     const selectedValue = directoryDropdown.value;
 
-        if (selectedValue) {
-            try {
-                const response = await fetch('/get-pdfs-preview', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ selectedOption: selectedValue })
-                });
+    //     if (selectedValue) {
+    //         try {
+    //             const response = await fetch('/get-pdfs-preview', {
+    //                 method: 'POST',
+    //                 headers: { 'Content-Type': 'application/json' },
+    //                 body: JSON.stringify({ selectedOption: selectedValue })
+    //             });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    const foldersGrid = document.getElementById('folders-grid');
-                    foldersGrid.innerHTML = ''; // Clear existing folder grid
+    //             if (response.ok) {
+    //                 const data = await response.json();
+    //                 const foldersGrid = document.getElementById('folders-grid');
+    //                 foldersGrid.innerHTML = ''; // Clear existing folder grid
 
-                    foldersGrid.classList.remove('d-none');
+    //                 foldersGrid.classList.remove('d-none');
 
-                    data.pdf_files.forEach(element => {
-                        // <span class="folder-image" style="background-image: url(${element.data_url})"></span>
+    //                 data.pdf_files.forEach(element => {
+    //                     // <span class="folder-image" style="background-image: url(${element.data_url})"></span>
 
-                        const pdfHtml = `
-                            <div class="folder-box">
-                                <span class="folder-name">${element.file_name}</span>
-                            </div>`;
-                        foldersGrid.innerHTML += pdfHtml;
+    //                     const pdfHtml = `
+    //                         <div class="folder-box">
+    //                             <span class="folder-name">${element.file_name}</span>
+    //                         </div>`;
+    //                     foldersGrid.innerHTML += pdfHtml;
 
-                        filesDirectories.push(element.file_path);
-                    });
-                } else {
-                    console.error('Failed to fetch PDFs:', response.status);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-    });
+    //                     filesDirectories.push(element.file_path);
+    //                 });
+    //             } else {
+    //                 console.error('Failed to fetch PDFs:', response.status);
+    //             }
+    //         } catch (error) {
+    //             console.error('Error:', error);
+    //         }
+    //     }
+    // });
 
     // Bind resize function to textarea input
     document.getElementById('chat-input-text').addEventListener('input', event => resizeTextArea(event.target));
 
-
-    // Generate embeddings
     generateEmbeddingsButton.addEventListener('click', async () => {
+        const directory = directoryInput.value.trim();
+
+        if (!directory) {
+            alert("Please select a directory before generating embeddings.");
+            return;
+        }
+
         try {
             const response = await fetch('/generate-embeddings', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ "files_directories": filesDirectories })
+                body: JSON.stringify({ directory })
             });
 
+            const result = await response.json();
+
             if (response.ok) {
-                // const data = await response.json();
-                console.log('Embeddings generated');
+                console.log('Embeddings generated successfully');
             } else {
-                console.error('Failed to generate embeddings:', response.status);
+                console.error('Server error:', result.error || response.statusText);
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Fetch error:', error);
         }
+    });
 
-        }
-
-    );
 
     // Search for text in documents
-    documentSearch.addEventListener('keypress', async () => {
-        const searchText = documentSearch.value;
-        const top_k = topKInput.value
+    documentSearch.addEventListener('keypress', async (event) => {
+        const searchText = documentSearch.value.trim();
+        const top_k = parseInt(topKInput.value);
 
-        // only search when the user presses the enter key
         if (event.key !== 'Enter') return;
-
-        // only search when there is a search text
-        if (!searchText || top_k < 1) return;
+        if (!searchText || isNaN(top_k) || top_k < 1) return;
 
         try {
             const response = await fetch('/search-documents', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ "query": searchText, "top_k": topKInput.value })
+                body: JSON.stringify({ query: searchText, top_k })
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                console.log(data);
-
-                searchResults.innerHTML = ''; // Clear existing search results
-                searchResults.classList.remove('d-none');
-
-                data.forEach(result => {
-                    searchResults.innerHTML  += `
-                        <div class="result-box">
-                            <span>
-                                <p class="pdf-name">PDF File: ${result.file_name}</p>
-                                <p class="similarity-score">Similarity Score: ${result.similarity.toFixed(5)}</p>
-                            </span>
-                            <p>${result.text}</p>
-                        </div>
-                    `;
-                });
-            } else {
-                console.error('Failed to search documents:', response.status);
+            if (!response.ok) {
+                let errorMessage = `HTTP ${response.status} - ${response.statusText}`;
+                try {
+                    const errorData = await response.json();
+                    if (errorData?.error) {
+                        errorMessage += `: ${errorData.error}`;
+                    }
+                } catch (jsonError) {
+                    errorMessage += ' (Could not parse error JSON)';
+                }
+                console.error('Search request failed:', errorMessage);
+                return;
             }
+
+            const data = await response.json();
+            console.log('Search results:', data);
+
+            searchResults.innerHTML = '';
+            searchResults.classList.remove('d-none');
+
+            data.forEach(result => {
+                searchResults.innerHTML += `
+                    <div class="result-box">
+                        <span>
+                            <p class="pdf-name">PDF File: ${result.file_name}</p>
+                            <p class="similarity-score">Similarity Score: ${result.similarity.toFixed(5)}</p>
+                        </span>
+                        <p>${result.text}</p>
+                    </div>
+                `;
+            });
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Unexpected error occurred during search:', error);
         }
     });
 
     documentSearch.addEventListener('input', () => {
-        // Check if the input field is empty
         if (documentSearch.value.trim() === '') {
             searchResults.classList.add('d-none');
         }
     });
+
     
 });

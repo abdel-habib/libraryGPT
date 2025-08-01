@@ -14,11 +14,6 @@
     <script src="{{ url_for('static', filename='scripts/index.js') }}" defer></script>
 
     <!-- icons -->
-    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=upload_file" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=send" /> -->
-    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=docs" /> -->
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=open_in_full" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=send" />
 
 
@@ -26,27 +21,8 @@
 <body>
     {% include 'partials/header.html' %}
 
-    <div class="workspace container-fluid"> <!-- container-fluid -->
+    <div class="workspace container-fluid">
         <div class="row">
-            <!-- <div class="col-2 panel-section">
-                <div class="row header">
-                    <span>Histoy</span>
-                </div>
-                <div class="row item">
-                    <a href="">Chat History</a>
-                </div>
-                <div class="row item">
-                    <a href="">Chat</a>
-                </div>
-                <div class="row item">
-                    <a href="">Notes</a>
-                </div>
-                <div class="row settings">
-                    <span>
-                        <a href="/logout">Logout</a>
-                    </span>
-                </div>
-            </div> -->
 
             <div class="col-lg-9 col-sm-12 directory-container" id="directory-container">
                 <div class="row document-search-wrapper">
@@ -62,30 +38,10 @@
                 </div>
                 <div class="row folders-wrapper">
                     <div class="folders-header">
-                        <div class="dropdown">
-                            <!-- check if the json file has items using jinja templates -->
-                            {% if workspace_json %}
-                                <select id="directory-menu">
-                                    <option value="" disabled selected>Choose your working directory</option>
-                                    {% for item in workspace_json %}
-                                        <option value="{{ item.path }}">"{{ item.path }}"</option>
-                                    {% endfor %}
-                                </select>
-                            {% else %}
-                                <span>This projects runs directory on your local folders and no data is stored externaly, thus it is important 
-                                    to add your list of directories that you wish to work on in the `workspace_json.json` file.</span>
-                                </span>
-                            {% endif %}
-                        </div>
-                        <!-- <span id="selected-directory-path">Please select a folder to search through.</span> -->
-                        <span>
-                            <!-- <label for="directoryInput" class="directory-selector-label">Select Folder Directory</label>
-                            <input class="directory-selector" type="file" id="directoryInput"  webkitdirectory directory>
-                            <button id="fetchPDFs" class="d-none"></button> -->
-                            <button id="generate-embeddings">
-                                <span>Process</span>
-                            </button>
-                        </span>
+                        <input type="text" name="directory" id="directory-input" class="directory-selector" placeholder="Insert Folder Directory Path">
+                        <button id="generate-embeddings" class="generate-embeddings-button">
+                            <span>Process</span>
+                        </button> 
                     </div>
                     <div class="folders-grid card-slider d-none" id="folders-grid">
                     </div>
@@ -105,14 +61,12 @@
                 <div class="chat-message-wrapper card-slider" id="chat-zone">
                 </div>
 
-                <!-- <div class="start-chat-message-wrapper" id="startChatMessage">
-                    <span>Start chatting with your documents!</span>
+                <div class="start-chat-message-wrapper" id="start-chat-message">
                     <div class="chat-messages-suggestions">
-                        <button onclick="sendMessage('Give me the biggest transaction in the past 5 days', output_format_request='text')">Give me the biggest transaction in the past 5 days</last></button>
-                        <button onclick="sendMessage('Give me the biggest transaction in the past 15 days', output_format_request='text')">Give me the biggest transaction in the past 15 days</button>
-                        <button onclick="sendMessage('Give me the lowest transaction in the past 30 days', output_format_request='text')">Give me the lowest transaction in the past 30 days</button>
+                        <button onclick="sendMessage('Summarise all documents', output_format_request='popup')">Summarise all documents</button>
+                        <button onclick="sendMessage('What are the main topics in the documents?', output_format_request='popup')">What are the main topics in the documents?</button>
                     </div>
-                </div> -->
+                </div>
                 
                 <div class="chat-footer" id="chat-footer">
                     <textarea 
@@ -122,7 +76,7 @@
                         cols="50"
                         placeholder="Type your message here..."
                     ></textarea>
-                    <button onclick="sendMessage('',output_format_request='text')">
+                    <button onclick="sendMessage('', output_format_request='text')">
                         <span class="material-symbols-outlined">
                             send
                             </span>

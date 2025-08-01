@@ -6,8 +6,7 @@
     --secondary-font-color: #3683ff;
     --primary-bg-color: rgba(240, 208, 197, 0.15);
     --box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    --box-shadow-hover: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
-
+    --box-shadow-hover: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }
 
 html::-webkit-scrollbar-track, .cool-scroll::-webkit-scrollbar-track, .card-slider::-webkit-scrollbar-track, .cool-scroll::-webkit-scrollbar-track{
@@ -84,11 +83,6 @@ button, input, select, textarea {
 a {
     text-decoration: none;
     color: inherit;
-}
-
-a:hover {
-    color: var(--secondary-font-color);
-    /* border: 1px solid var(--secondary-font-color); */
 }
 
 @media (max-width: 960px) {
@@ -184,10 +178,6 @@ a:hover {
     padding-right: 0;
 }
 
-.document-search-wrapper input:focus{
-    border: 1px solid #007bff;
-}
-
 .folders-wrapper{
     background-color: #fff;
     border-radius: 8px;
@@ -202,31 +192,27 @@ a:hover {
 }
 
 .folders-header button{
-    background: #007bff;
-    color: #fff;
     border: none;
-    box-shadow: var(--box-shadow);
     padding: 10px 20px;
     border-radius: 8px;
     cursor: pointer;
-}
 
-.folders-header .dropdown{
-    width: 400px;
-}
-
-.folders-header select{
-    padding: 10px;
-    width: 100%;
-    border-radius: 8px;
-    border-color: #eee;
-    cursor: pointer;
+    background-color: none;
     box-shadow: var(--box-shadow);
-    outline: none;
+    color: var(--primary-font-color);
 }
 
 .folders-header button:hover{
-    background: #0056b3;
+    box-shadow: var(--box-shadow-hover);
+}
+
+.folders-header input{
+    padding: 10px;
+    width: 60%;
+    border-radius: 8px;
+    border-color: #eee;
+    box-shadow: var(--box-shadow);
+    outline: none;
 }
 
 .folders-grid{

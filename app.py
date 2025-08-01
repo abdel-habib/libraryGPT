@@ -11,11 +11,14 @@ import json
 from dotenv import load_dotenv
 from helpers.pdf_preview import return_pdf_preview_html
 import PyPDF2
+import shutil
 
 # from sentence_transformers import SentenceTransformer
 from langchain_huggingface import HuggingFaceEmbeddings 
 # from langchain.embeddings import OpenAIEmbeddings
+
 from langchain_chroma import Chroma
+
 from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
@@ -27,7 +30,6 @@ app = Flask(__name__)
 
 load_dotenv()
 UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER')
-WOKSPACE_JSON = os.getenv('WORKSPACE_JSON')
 
 # Set embedding_function to None if using SentenceTransformer #=embedding_model,
 # SentenceTransformer does not normalise, so we need to normalise the embeddings in a later stage for cosine similarity
@@ -38,12 +40,10 @@ WOKSPACE_JSON = os.getenv('WORKSPACE_JSON')
 # embedding_model = SentenceTransformer('all-MiniLM-L6-v2', device='cpu')
 embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")  # Load SentenceTransformers model
 
-chroma_db_path = "./chroma_db"  # Path to store Chroma database
-vectorstore = Chroma(
-    persist_directory=chroma_db_path, 
-    embedding_function = embedding_model,
-    collection_metadata={"hnsw:space": "cosine"}  # Define the metadata to change the distance function to cosine
-    )
+# Clear the database at startup
+chroma_db_path = "./chroma_db"
+collection_name = 'pdf_embeddings'
+vectorstore = None  # Global handle
 
 # Text splitter configuration
 text_splitter = RecursiveCharacterTextSplitter(
@@ -52,13 +52,9 @@ text_splitter = RecursiveCharacterTextSplitter(
 )
 
 @app.route("/")
-def hello_world():
-    # read the json file
-    with open(WOKSPACE_JSON) as f:
-        data = json.load(f)
-
+def index():
     # return the json file with the template
-    return render_template('index.html', workspace_json=data)
+    return render_template('index.html')
 
 # @app.route('/upload', methods=['POST'])
 # def upload_file():
@@ -81,82 +77,102 @@ def hello_world():
 
 @app.route('/generate-embeddings', methods=['POST'])
 def generate_pdfs_embeddings():
+    global vectorstore
+
     try:
-        files_directories = request.json.get("files_directories")
+        data = request.get_json()
+        if not data or "directory" not in data:
+            return jsonify({"error": "Missing 'directory' in request body"}), 400
 
-        if len(files_directories) == 0:
-            return jsonify({'error': 'No files selected'}), 400
+        directory = data["directory"]
+
+        if not os.path.exists(directory):
+            return jsonify({"error": "Directory does not exist"}), 400
         
-        for file in files_directories:
-            with open(file, 'rb') as f:
-                # read the pdf
-                reader = PyPDF2.PdfReader(f)
+        # Delete existing collection (if it exists)
+        try:
+            temp_vs = Chroma(
+                persist_directory=chroma_db_path,
+                embedding_function=embedding_model
+            )
+            temp_vs._client.delete_collection(name=collection_name)
+        except Exception as e:
+            print(f"Error deleting existing collection: {e}")
 
-                # concat all text
-                pdf_full_text = ''.join(page.extract_text() for page in reader.pages)
+        # Recreate vectorstore with the same collection name
+        vectorstore = Chroma(
+            persist_directory=chroma_db_path,
+            collection_name=collection_name,
+            embedding_function=embedding_model,
+            collection_metadata={"hnsw:space": "cosine"}
+        )
 
-                # split into chuncks
-                pdf_chunks = text_splitter.split_text(pdf_full_text)
+        pdf_files = [file for file in os.listdir(directory) if file.lower().endswith('.pdf')]
+        if not pdf_files:
+            return jsonify({"error": "No PDF files found in the directory"}), 400
 
-                # Create Document objects for each chunk
-                pdf_documents = [
-                    Document(page_content=chunk, 
-                             metadata={
-                                 "file_name": file.split('\\')[-1], 
-                                 "chunk_index": idx
-                                 })
-                    for idx, chunk in enumerate(pdf_chunks)
-                ]
-                
-                try:
-                    # Add the documents to the Chroma database (embedding is handled by Chroma's embedding_function)
+        for file in pdf_files:
+            try:
+                with open(os.path.join(directory, file), 'rb') as f:
+                    reader = PyPDF2.PdfReader(f)
+                    pdf_full_text = ''.join(page.extract_text() or '' for page in reader.pages)
+                    pdf_chunks = text_splitter.split_text(pdf_full_text)
+
+                    pdf_documents = [
+                        Document(
+                            page_content=chunk,
+                            metadata={
+                                "file_name": os.path.basename(file),
+                                "chunk_index": idx
+                            }
+                        )
+                        for idx, chunk in enumerate(pdf_chunks)
+                    ]
+
                     vectorstore.add_documents(pdf_documents)
 
-                except Exception as e:
-                    print(f"Error adding documents to Chroma: {e}")
-                    return jsonify({"error": str(e)}), 500
-
-        # Persist the vectorstore to disk 
-        # This is important to save the embeddings and documents
-        # If you don't persist, the embeddings will be lost when the app restarts               
-        vectorstore.persist()
+            except Exception as e:
+                app.logger.error(f"Error processing file '{file}': {e}")
+                return jsonify({"error": f"Error processing file '{file}'"}), 500
 
         return jsonify({'message': 'Embeddings generated successfully'}), 200
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        app.logger.exception("Unhandled exception during embedding generation")
+        return jsonify({"error": "Internal server error occurred"}), 500
     
 
 @app.route('/search-documents', methods=['POST'])
 def search():
+    global vectorstore
+
     try:
-        # Get query and top_k from the request
         query = request.json.get("query")
         top_k = request.json.get("top_k", 5)
 
-        if not isinstance(top_k, int):
-            top_k = int(top_k)
-        
-        try:
-            # Perform similarity search and retrieve scores
-            results = vectorstore.similarity_search_with_score(query, k=top_k)
-        except Exception as e:
-            raise ValueError(f"Error in similarity search: {e}")
+        if not query:
+            return jsonify({"error": "Query not provided"}), 400
 
-        # Format the response with confidence scores
+        if not vectorstore:
+            return jsonify({"error": "No embeddings available. Please generate embeddings first."}), 400
+
+        results = vectorstore.similarity_search_with_score(query, k=int(top_k))
+
         response = [
             {
                 "text": result[0].page_content,
                 "file_name": result[0].metadata.get("file_name"),
                 "chunk_index": result[0].metadata.get("chunk_index"),
-                "similarity": 1 - result[1] # Convert cosine distance to cosine similarity
+                "similarity": 1 - result[1]
             } for result in results
         ]
 
-        response = sorted(response, key=lambda x: x["similarity"], reverse=True)
+        response.sort(key=lambda x: x["similarity"], reverse=True)
 
         return jsonify(response), 200
+
     except Exception as e:
+        app.logger.exception("Search failed")
         return jsonify({"error": str(e)}), 500
 
 
